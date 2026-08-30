@@ -335,3 +335,11 @@ ul,ol{list-style:none}
   .strip__in{padding:0 14px}
   .strip__in li{max-width:220px;padding:8px 10px}
 }
+
+/* ---- 正文收尾：链接/强调/分隔线的克制处理 ---- */
+.prose a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:4px;text-decoration-thickness:1px;transition:text-decoration-color .15s}
+.prose a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.prose strong,.prose b{font-weight:700}
+.prose em{font-style:normal;background:linear-gradient(transparent 62%,var(--soft) 62%)}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:2.6em 0}
+.prose sup{font-size:.72em;color:var(--meta-2)}

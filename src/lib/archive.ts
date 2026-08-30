@@ -14,8 +14,11 @@ const MAX_BYTES = 2 * 1024 * 1024; // 正文 JSON 超过 2MB 视为异常，不�
 // 存的转载正文不宜公开可下载；且新版 Vercel 控制台创建的 Blob store 默认就是 private，
 // 用 public 会被直接拒绝（"Cannot use public access on a private store"）
 const ACCESS = 'private' as const;
+const RECORD_VERSION = 2;
 
 export interface ArticleRecord {
+  /** 存档格式版本：清洗规则升级时 +1，旧版本读取时视为未命中自动重抓 */
+  v?: number;
   url: string;
   host: string;
   title: string;
@@ -74,10 +77,8 @@ export async function loadArchive(key: string): Promise<ArticleRecord | null> {
     if (buf.byteLength === 0) { lastArchiveReadError = 'blob body is empty'; return null; }
     if (buf.byteLength > MAX_BYTES) { lastArchiveReadError = `blob too large: ${buf.byteLength}`; return null; }
     const rec = JSON.parse(buf.toString('utf-8')) as ArticleRecord;
-    if (!rec || typeof rec.html !== 'string' || !rec.html) {
-      lastArchiveReadError = 'parsed record has no html';
-      return null;
-    }
+    if (!rec || typeof rec.html !== 'string' || !rec.html) return null;
+    if (rec.v !== RECORD_VERSION) return null; // 旧清洗规则的存档，弃用重抓
     lastArchiveReadError = '';
     return rec;
   } catch (e) {
@@ -93,7 +94,7 @@ export async function saveArchive(key: string, record: ArticleRecord): Promise<b
     lastArchiveWriteError = `record rejected: html length ${record.html.length}`;
     return false;
   }
-  const body = JSON.stringify(record);
+  const body = JSON.stringify({ ...record, v: RECORD_VERSION });
   if (body.length > MAX_BYTES) {
     lastArchiveWriteError = `body too large: ${body.length}`;
     return false;

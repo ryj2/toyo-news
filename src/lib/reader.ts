@@ -96,7 +96,8 @@ function cleanAndRewrite(doc: Document, base: URL): string {
     }
   }
 
-  // 图片走本站代理：国内 CDN 普遍校验 Referer，直链在别的域下会 403
+  // 图片走本站代理：国内 CDN 普遍校验 Referer，直链在别的域下会 403。
+  // 同时剥掉源站的内联样式与固定宽高，交给本站的响应式排版接管。
   for (const img of Array.from(doc.body.querySelectorAll('img'))) {
     const src = img.getAttribute('src') || img.getAttribute('data-src');
     if (!src) {
@@ -109,18 +110,29 @@ function cleanAndRewrite(doc: Document, base: URL): string {
         img.setAttribute('src', `/api/img?u=${encodeURIComponent(abs.href)}`);
       } else {
         img.remove();
+        continue;
       }
     } catch {
       img.remove();
+      continue;
     }
     img.setAttribute('loading', 'lazy');
+    img.setAttribute('decoding', 'async');
     img.removeAttribute('srcset');
     img.removeAttribute('data-src');
+    img.removeAttribute('style');
+    img.removeAttribute('width');
+    img.removeAttribute('height');
   }
 
   for (const a of Array.from(doc.body.querySelectorAll('a'))) {
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer nofollow');
+  }
+
+  // 清掉抽取消剩下来的空壳段落/占位节点，避免正文出现一排排空洞
+  for (const el of Array.from(doc.body.querySelectorAll('p, div, span, figure, figcaption'))) {
+    if (!el.textContent?.trim() && !el.querySelector('img')) el.remove();
   }
 
   return doc.body.innerHTML;
