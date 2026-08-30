@@ -21,6 +21,8 @@ const ALLOWED_ROOTS = [
   '36kr.com',
   'huxiu.com',
   'huxiucdn.com',
+  'people.com.cn',
+  'chinanews.com.cn',
 ];
 
 const UA =

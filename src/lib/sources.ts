@@ -46,6 +46,20 @@ export const SOURCES: SourceDef[] = [
     weight: 75,
   },
   {
+    id: 'chinanews',
+    name: '中国新闻网',
+    section: 'social',
+    url: 'https://www.chinanews.com.cn/rss/scroll-news.xml',
+    weight: 70,
+  },
+  {
+    id: 'people',
+    name: '人民网',
+    section: 'social',
+    url: 'http://www.people.com.cn/rss/politics.xml',
+    weight: 65,
+  },
+  {
     id: 'nbd',
     name: '每日经济新闻',
     section: 'economy',

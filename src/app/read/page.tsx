@@ -72,6 +72,7 @@ export default async function ReadPage({ searchParams }: { searchParams: Promise
                   本文转载自 <b>{art.siteName || art.host}</b>
                   {' '}（<a href={art.url} target="_blank" rel="noopener noreferrer nofollow">查看原文</a>），
                   由本站抓取公开页面并重排为日式版式显示，仅去除广告与导航，未作内容修改。
+                  内容不代表本站立场与观点，文责由原新闻源及原作者承担；
                   正文的著作权与全部权利归 {art.siteName || art.host} 及原作者所有。
                   {art.mode === 'archive' && <>以下为本站于 {fmtStamp(art.fetchedAt)} 抓取的存档版本。</>}
                   {art.mode === 'stale' && (
