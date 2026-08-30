@@ -6,7 +6,6 @@
 
 **在线演示**：[news.01101.top](https://news.01101.top/)
 
-![首页截图](docs/screenshot.png)
 
 ## 它是什么样的
 
