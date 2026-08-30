@@ -36,6 +36,10 @@ export default async function Home() {
   const lead = social[0] ?? items[0];
   const digest = items.slice(0, 3);
   const live = items.slice(0, 10);
+  // 头条的「相关阅读」：同板块的下两条
+  const related = (social.length > 1 ? social : items).slice(1, 3);
+  // 图说新闻：有配图的条目，跳过头条避免重复
+  const photoItems = items.filter((it) => it.image && it.key !== lead?.key).slice(0, 6);
 
   return (
     <>
@@ -114,6 +118,20 @@ export default async function Home() {
                       {lead.snippet}
                     </p>
                   )}
+
+                  {related.length > 0 && (
+                    <div className="related" style={{ gridColumn: 1 }}>
+                      <p className="related__head">相关阅读</p>
+                      <ul>
+                        {related.map((it) => (
+                          <li key={it.key}>
+                            <span>{it.sourceName}</span>
+                            <a href={readHref(it.url)}>{it.title}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </article>
 
                 <section className="digest" id="digest">
@@ -177,6 +195,30 @@ export default async function Home() {
                     </div>
                   </article>
                 ))}
+
+                {photoItems.length >= 3 && (
+                  <section className="photolist">
+                    <div className="live__head">
+                      <h2>图说新闻</h2>
+                      <a href="/section/social">更多</a>
+                    </div>
+                    <div className="photogrid">
+                      {photoItems.map((it) => (
+                        <figure key={it.key}>
+                          <a
+                            href={readHref(it.url)}
+                            style={{ backgroundImage: `url(/api/img?u=${encodeURIComponent(it.image!)})` }}
+                            className="photogrid__img"
+                            aria-label={it.title}
+                          />
+                          <figcaption>
+                            <a href={readHref(it.url)}>{it.title}</a>
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </section>
+                )}
 
                 <section className="live" style={{ marginTop: 30 }}>
                   <div className="live__head">
