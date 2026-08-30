@@ -5,6 +5,7 @@ import { SECTIONS, SOURCES, type SectionId } from '@/lib/sources';
 import { readHref } from '@/lib/reader';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 function isSection(v: string): v is SectionId {
   return SECTIONS.some((s) => s.id === v);
@@ -118,6 +119,7 @@ export default async function SectionPage({ params }: { params: Promise<{ slug: 
         </aside>
       </div>
       <SiteFooter />
+      <script dangerouslySetInnerHTML={{ __html: 'setTimeout(function(){location.reload()},900000)' }} />
     </>
   );
 }

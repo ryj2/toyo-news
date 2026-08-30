@@ -6,6 +6,8 @@ import type { NewsItem } from '@/lib/news';
 
 // HTML 每次请求渲染；抓取结果的 15 分钟缓存 + Blob 快照秒开见 lib/news
 export const dynamic = 'force-dynamic';
+// 给 after() 的后台刷新留足时间：冷缓存时要同步抓完所有 RSS 源
+export const maxDuration = 60;
 
 function Thumb({ it, className }: { it: NewsItem; className: string }) {
   return it.image ? (
@@ -251,6 +253,8 @@ export default async function Home() {
       </div>
 
       <SiteFooter />
+      {/* 报纸每 15 分钟自动"翻页"：让开着的标签页也能看到最新一期 */}
+      <script dangerouslySetInnerHTML={{ __html: 'setTimeout(function(){location.reload()},900000)' }} />
     </>
   );
 }
